@@ -1,16 +1,16 @@
 package com.example.backend1.model;
 
-public class Product {
+public class ProductMessage implements java.io.Serializable {
     private String id;
     private String name;
     private double price;
     private String status;
 
-    public Product(String id, String name, double price) {
+    public ProductMessage(String id, String name, double price, String status) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.status = "available";
+        this.status = status;
     }
 
     public String getId() {

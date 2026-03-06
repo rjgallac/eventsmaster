@@ -1,16 +1,20 @@
 package com.example.backend1.model;
 
-public class Product {
+public class ProductDto {
+
     private String id;
     private String name;
     private double price;
     private String status;
 
-    public Product(String id, String name, double price) {
+    public ProductDto() {
+    }
+
+    public ProductDto(String id, String name, double price, String status) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.status = "available";
+        this.status = status;
     }
 
     public String getId() {
