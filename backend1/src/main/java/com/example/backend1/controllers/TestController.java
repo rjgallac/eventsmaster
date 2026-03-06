@@ -42,7 +42,8 @@ public class TestController {
         productMap.put(productDto.getId(), product);
         //sends async msg to rabbitmq to notify other services about the new product
         ProductMessage productMessage = new ProductMessage(product.getId(), product.getName(), product.getPrice(), product.getStatus());
-        rabbitTemplate.convertAndSend("product.added", productMessage);
+        rabbitTemplate.convertAndSend("queue-name", productMessage);
+        // rabbitTemplate.convertAndSend("queue-name", "hi");
         logger.info("Product added: " + product.getName() + " with price: " + product.getPrice() + " and status: " + product.getStatus());
         return "Product added successfully";
     }
