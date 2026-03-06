@@ -1,7 +1,7 @@
 package com.example.backend2.model;
 
 public class ProductMessage implements java.io.Serializable {
-     private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     private String id;
     private String name;
     private double price;

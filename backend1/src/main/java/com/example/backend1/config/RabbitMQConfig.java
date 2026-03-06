@@ -17,6 +17,11 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue statusQueue() {
+        return new Queue("status-queue", false);
+    }
+
+    @Bean
     public DirectExchange exchange() {
         return new DirectExchange("exchange-name");
     }
@@ -24,6 +29,12 @@ public class RabbitMQConfig {
     @Bean
     public Binding binding(Queue queue, DirectExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with("routing-key");
+        
+    }
+
+    @Bean
+    public Binding statusBinding(Queue statusQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(statusQueue).to(exchange).with("status-routing-key");
     }
 
     @Bean
