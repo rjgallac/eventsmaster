@@ -49,6 +49,10 @@ public class JobSpecService {
 
     }
 
+    public void deleteJobSpec(Long id) {
+        jobSpecRepository.deleteById(id);
+    }
+
     
 
 }

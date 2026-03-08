@@ -31,4 +31,8 @@ public class CvService {
         return cvRepository.findById(id).orElse(null);
     }
 
+    public void deleteCv(Long id) {
+        cvRepository.deleteById(id);
+    }
+
 }

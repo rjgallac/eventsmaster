@@ -18,6 +18,8 @@ interface JobSpec {
   location: string | null;
   salary: number | null;
   score: number | null;
+  company: string | null;
+  jobTitle: string | null;
 }
 
 export function App() {
@@ -145,6 +147,40 @@ export function App() {
     setSelectedCvId(e.target.value === '' ? '' : Number(e.target.value));
   };
 
+  const handleDeleteJobSpec = async (id: number) => {
+    try {
+      const response = await fetch(`/api/jobspec/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setMessage2('Job spec deleted successfully!');
+        fetchJobSpecs();
+      } else {
+        setMessage2('Failed to delete job spec');
+      }
+    } catch (error) {
+      setMessage2('Error deleting job spec');
+    }
+  };
+
+  const handleDeleteCv = async (id: number) => {
+    try {
+      const response = await fetch(`/api/cv/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setMessage('CV deleted successfully!');
+        fetchCvs();
+      } else {
+        setMessage('Failed to delete CV');
+      }
+    } catch (error) {
+      setMessage('Error deleting CV');
+    }
+  };
+
   return (
     <div>
       <h1>Add CV</h1>
@@ -230,6 +266,15 @@ export function App() {
               >
                 CV Content
               </th>
+              <th
+                style={{
+                  border: '1px solid #ddd',
+                  padding: '8px',
+                  textAlign: 'center',
+                }}
+              >
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -243,6 +288,27 @@ export function App() {
                 </td>
                 <td style={{ border: '1px solid #ddd', padding: '8px' }}>
                   {cv.curriculum_vitae_content}
+                </td>
+                <td
+                  style={{
+                    border: '1px solid #ddd',
+                    padding: '8px',
+                    textAlign: 'center',
+                  }}
+                >
+                  <button
+                    onClick={() => handleDeleteCv(cv.id)}
+                    style={{
+                      backgroundColor: '#dc3545',
+                      color: 'white',
+                      border: 'none',
+                      padding: '5px 10px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
@@ -364,6 +430,33 @@ export function App() {
               >
                 Score
               </th>
+              <th
+                style={{
+                  border: '1px solid #ddd',
+                  padding: '8px',
+                  textAlign: 'left',
+                }}
+              >
+                Company
+              </th>
+              <th
+                style={{
+                  border: '1px solid #ddd',
+                  padding: '8px',
+                  textAlign: 'left',
+                }}
+              >
+                Job Title
+              </th>
+              <th
+                style={{
+                  border: '1px solid #ddd',
+                  padding: '8px',
+                  textAlign: 'center',
+                }}
+              >
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -386,6 +479,33 @@ export function App() {
                 </td>
                 <td style={{ border: '1px solid #ddd', padding: '8px' }}>
                   {js.score ?? '-'}
+                </td>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                  {js.company ?? '-'}
+                </td>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                  {js.jobTitle ?? '-'}
+                </td>
+                <td
+                  style={{
+                    border: '1px solid #ddd',
+                    padding: '8px',
+                    textAlign: 'center',
+                  }}
+                >
+                  <button
+                    onClick={() => handleDeleteJobSpec(js.id)}
+                    style={{
+                      backgroundColor: '#dc3545',
+                      color: 'white',
+                      border: 'none',
+                      padding: '5px 10px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}

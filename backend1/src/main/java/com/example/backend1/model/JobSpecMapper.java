@@ -23,7 +23,9 @@ public class JobSpecMapper {
         jobSpecDto.setLocation(jobSpec.getLocation());
         jobSpecDto.setSalary(jobSpec.getSalary());
         jobSpecDto.setScore(jobSpec.getScore());
-
+        jobSpecDto.setCvId(jobSpec.getCvId());
+        jobSpecDto.setJobTitle(jobSpec.getJobTitle());
+        jobSpecDto.setCompany(jobSpec.getCompany());
         return jobSpecDto;
     }
 

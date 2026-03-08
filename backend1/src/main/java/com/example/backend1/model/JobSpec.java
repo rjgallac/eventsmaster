@@ -75,8 +75,8 @@ public class JobSpec {
     public void setCvId(Long cvId) {
         this.cvId = cvId;
     }
-    public void setCompany(String substring) {
-        
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public String getCompany() {

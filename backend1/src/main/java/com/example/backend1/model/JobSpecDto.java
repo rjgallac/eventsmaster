@@ -7,6 +7,9 @@ public class JobSpecDto {
     private String location;
     private String salary;
     private String score;
+    private String jobTitle;
+    private String company;
+
     public String getLocation() {
         return location;
     }
@@ -47,5 +50,17 @@ public class JobSpecDto {
     }
     public void setCvId(Long cvId) {
         this.cvId = cvId;
+    }
+    public String getJobTitle() {
+        return jobTitle;
+    }
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+    public String getCompany() {
+        return company;
+    }
+    public void setCompany(String company) {
+        this.company = company;
     }
 }
