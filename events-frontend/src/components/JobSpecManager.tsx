@@ -20,6 +20,8 @@ export function JobSpecManager() {
   const [message2, setMessage2] = useState('');
   const [jobSpecs, setJobSpecs] = useState<JobSpec[]>([]);
   const [cvs, setCvs] = useState<any[]>([]);
+  const [selectedJobSpec, setSelectedJobSpec] = useState<JobSpec | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchCvs();
@@ -101,10 +103,14 @@ export function JobSpecManager() {
     }
   };
 
+  const handleViewClick = (jobSpec: JobSpec) => {
+    setSelectedJobSpec(jobSpec);
+    setShowModal(true);
+  };
+
   const jobSpecColumns = [
     { key: 'id', header: 'ID' },
     { key: 'cvId', header: 'CV ID' },
-    { key: 'job_spec_content', header: 'Job Spec Content' },
     { key: 'location', header: 'Location' },
     { key: 'salary', header: 'Salary' },
     { key: 'score', header: 'Score' },
@@ -114,7 +120,7 @@ export function JobSpecManager() {
 
   const formatValue = (value: any) => {
     if (value === null || value === undefined) return '-';
-    if (typeof value === 'number') return `$${value}`;
+    if (typeof value === 'number') return `${value}`;
     return value;
   };
 
@@ -167,9 +173,83 @@ export function JobSpecManager() {
         data={jobSpecs}
         columns={jobSpecColumns}
         onDelete={handleDeleteJobSpec}
+        onActionClick={handleViewClick}
+        actionLabel="View/Edit"
         emptyMessage="No job specs submitted yet."
         formatValue={formatValue}
       />
+
+      {showModal && selectedJobSpec && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '8px',
+              maxWidth: '700px',
+              width: '90%',
+              maxHeight: '80vh',
+              overflow: 'auto',
+            }}
+          >
+            <h2>Job Spec Details</h2>
+            <div style={{ marginBottom: '15px' }}>
+              <strong>ID:</strong> {selectedJobSpec.id}
+            </div>
+            <div style={{ marginBottom: '15px' }}>
+              <strong>CV ID:</strong> {selectedJobSpec.cvId || '-'}
+            </div>
+            <div style={{ marginBottom: '15px' }}>
+              <strong>Job Title:</strong> {selectedJobSpec.jobTitle || '-'}
+            </div>
+            <div style={{ marginBottom: '15px' }}>
+              <strong>Company:</strong> {selectedJobSpec.company || '-'}
+            </div>
+            <div style={{ marginBottom: '15px' }}>
+              <strong>Location:</strong> {selectedJobSpec.location || '-'}
+            </div>
+            <div style={{ marginBottom: '15px' }}>
+              <strong>Salary:</strong> ${selectedJobSpec.salary ?? '-'}
+            </div>
+            <div style={{ marginBottom: '15px' }}>
+              <strong>Score:</strong> {selectedJobSpec.score ?? '-'}
+            </div>
+            <div style={{ marginBottom: '15px' }}>
+              <strong>Job Spec Content:</strong>
+              <pre
+                style={{
+                  backgroundColor: '#f5f5f5',
+                  padding: '10px',
+                  borderRadius: '4px',
+                  marginTop: '5px',
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                }}
+              >
+                {selectedJobSpec.job_spec_content}
+              </pre>
+            </div>
+            <button
+              onClick={() => setShowModal(false)}
+              style={{ padding: '10px 20px' }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -14,6 +14,8 @@ export function CvManager() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState('');
   const [cvs, setCvs] = useState<Cv[]>([]);
+  const [selectedCv, setSelectedCv] = useState<Cv | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchCvs();
@@ -79,10 +81,14 @@ export function CvManager() {
     }
   };
 
+  const handleViewClick = (cv: Cv) => {
+    setSelectedCv(cv);
+    setShowModal(true);
+  };
+
   const cvColumns = [
     { key: 'id', header: 'ID' },
     { key: 'name', header: 'Name' },
-    { key: 'curriculum_vitae_content', header: 'CV Content' },
   ];
 
   return (
@@ -126,8 +132,67 @@ export function CvManager() {
         data={cvs}
         columns={cvColumns}
         onDelete={handleDeleteCv}
+        onActionClick={handleViewClick}
+        actionLabel="View/Edit"
         emptyMessage="No CVs submitted yet."
       />
+
+      {showModal && selectedCv && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '8px',
+              maxWidth: '600px',
+              width: '90%',
+              maxHeight: '80vh',
+              overflow: 'auto',
+            }}
+          >
+            <h2>CV Details</h2>
+            <div style={{ marginBottom: '15px' }}>
+              <strong>ID:</strong> {selectedCv.id}
+            </div>
+            <div style={{ marginBottom: '15px' }}>
+              <strong>Name:</strong> {selectedCv.name}
+            </div>
+            <div style={{ marginBottom: '15px' }}>
+              <strong>CV Content:</strong>
+              <pre
+                style={{
+                  backgroundColor: '#f5f5f5',
+                  padding: '10px',
+                  borderRadius: '4px',
+                  marginTop: '5px',
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                }}
+              >
+                {selectedCv.curriculum_vitae_content}
+              </pre>
+            </div>
+            <button
+              onClick={() => setShowModal(false)}
+              style={{ padding: '10px 20px' }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

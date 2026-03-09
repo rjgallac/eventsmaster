@@ -9,7 +9,9 @@ interface Cv {
 interface DataTableProps {
   data: Cv[] | any[];
   columns: Array<{ key: keyof Cv | keyof any; header: string }>;
-  onDelete: (id: number) => void;
+  onDelete?: (id: number) => void;
+  onActionClick?: (item: any) => void;
+  actionLabel?: string;
   emptyMessage: string;
   formatValue?: (value: any, row: any) => React.ReactNode;
 }
@@ -18,6 +20,8 @@ export function DataTable({
   data,
   columns,
   onDelete,
+  onActionClick,
+  actionLabel = 'Delete',
   emptyMessage,
   formatValue,
 }: DataTableProps) {
@@ -83,19 +87,37 @@ export function DataTable({
                 textAlign: 'center',
               }}
             >
-              <button
-                onClick={() => onDelete(item.id)}
-                style={{
-                  backgroundColor: '#dc3545',
-                  color: 'white',
-                  border: 'none',
-                  padding: '5px 10px',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                }}
-              >
-                Delete
-              </button>
+              {onDelete && (
+                <button
+                  onClick={() => onDelete(item.id)}
+                  style={{
+                    backgroundColor: '#dc3545',
+                    color: 'white',
+                    border: 'none',
+                    padding: '5px 10px',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Delete
+                </button>
+              )}
+              {onActionClick && (
+                <button
+                  onClick={() => onActionClick(item)}
+                  style={{
+                    backgroundColor: '#007bff',
+                    color: 'white',
+                    border: 'none',
+                    padding: '5px 10px',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    marginLeft: '5px',
+                  }}
+                >
+                  {actionLabel}
+                </button>
+              )}
             </td>
           </tr>
         ))}
