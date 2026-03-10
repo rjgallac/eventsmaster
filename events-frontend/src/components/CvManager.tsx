@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
 import { DataTable } from './DataTable';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { MessageDisplay } from './MessageDisplay';
 
 interface Cv {

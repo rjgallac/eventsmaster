@@ -24,6 +24,8 @@ docker run -d --name cvcompare-db \
 
 ./nx serve events-frontend
 
+http://localhost:4200/
+
 docker run -d --hostname rabbitmq --name cv-compare-rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management   
 guest/guest
 
