@@ -3,6 +3,8 @@ import { Client, StompSubscription } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { DataTable } from './DataTable';
 import { MessageDisplay } from './MessageDisplay';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface JobSpec {
   cvId: number | null;
@@ -71,6 +73,10 @@ export function JobSpecManager() {
   };
 
   const updateJobSpecInList = (statusMessage: any) => {
+    toast.success(`Job Spec ${statusMessage.jobSpecId} updated`, {
+      autoClose: 3000,
+    });
+
     setJobSpecs((prevJobSpecs) =>
       prevJobSpecs.map((jobSpec) => {
         if (jobSpec.id === statusMessage.jobSpecId) {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CvManager } from '../components/CvManager';
 import { JobSpecManager } from '../components/JobSpecManager';
+import { ToastContainer } from 'react-toastify';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -15,6 +16,7 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <ToastContainer position="top-right" autoClose={3000} />
       <NavigationMenu className="mx-auto max-w-3xl">
         <NavigationMenuList>
           <NavigationMenuItem>
