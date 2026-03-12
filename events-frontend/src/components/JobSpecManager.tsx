@@ -24,6 +24,9 @@ export function JobSpecManager() {
   const [cvs, setCvs] = useState<any[]>([]);
   const [selectedJobSpec, setSelectedJobSpec] = useState<JobSpec | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [submittingJobSpecIds, setSubmittingJobSpecIds] = useState<number[]>(
+    [],
+  );
   const stompClientRef = useRef<Client | null>(null);
 
   useEffect(() => {
@@ -85,6 +88,10 @@ export function JobSpecManager() {
         return jobSpec;
       }),
     );
+
+    setSubmittingJobSpecIds((prev) =>
+      prev.filter((id) => id !== statusMessage.jobSpecId),
+    );
   };
 
   const fetchCvs = async () => {
@@ -105,6 +112,11 @@ export function JobSpecManager() {
       if (response.ok) {
         const data = await response.json();
         setJobSpecs(data);
+
+        const existingIds = data.map((js: JobSpec) => js.id);
+        setSubmittingJobSpecIds((prev) =>
+          prev.filter((id) => existingIds.includes(id)),
+        );
       }
     } catch (error) {
       console.error('Error fetching job specs:', error);
@@ -131,14 +143,37 @@ export function JobSpecManager() {
       });
 
       if (response.ok) {
+        let parsedSuccessfully = false;
+        try {
+          const data = await response.json();
+          if (data && data.id) {
+            setSubmittingJobSpecIds((prev) => [...prev, data.id]);
+            parsedSuccessfully = true;
+          } else {
+            console.log('Response received but no ID:', data);
+          }
+        } catch (parseError) {
+          console.log('Response not JSON, refreshing list');
+          const tempId = Date.now();
+          setSubmittingJobSpecIds((prev) => [...prev, tempId]);
+
+          setTimeout(() => {
+            fetchJobSpecs();
+          }, 500);
+        }
+
         setMessage2('Job spec submitted successfully!');
         setJobSpecContent('');
         setSelectedCvId('');
-        fetchJobSpecs();
+
+        if (parsedSuccessfully) {
+          fetchJobSpecs();
+        }
       } else {
         setMessage2('Failed to submit job spec');
       }
     } catch (error) {
+      console.error('Submission error:', error);
       setMessage2('Error connecting to backend');
     } finally {
       setIsSubmittingJobSpec(false);
@@ -176,6 +211,8 @@ export function JobSpecManager() {
     { key: 'company', header: 'Company' },
     { key: 'jobTitle', header: 'Job Title' },
   ];
+
+  const isSubmitting = (id: number) => submittingJobSpecIds.includes(id);
 
   const formatValue = (value: any) => {
     if (value === null || value === undefined) return '-';
@@ -253,6 +290,7 @@ export function JobSpecManager() {
         actionLabel="View/Edit"
         emptyMessage="No job specs submitted yet."
         formatValue={formatValue}
+        isSubmitting={isSubmitting}
       />
 
       {showModal && selectedJobSpec && (
