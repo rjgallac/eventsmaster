@@ -5,8 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -18,6 +16,11 @@ public class CurriculumVitae {
     private String name;
     @Column(columnDefinition="TEXT")
     private String curriculum_vitae_content;
+
+    @Column(columnDefinition="TEXT")
+    private String curriculum_vitae_content_suggestions;
+
+    private String status;
 
     
     // Getters and setters
@@ -38,6 +41,22 @@ public class CurriculumVitae {
     }
     public void setCurriculum_vitae_content(String curriculum_vitae_content) {
         this.curriculum_vitae_content = curriculum_vitae_content;
+    }
+
+    public String getCurriculum_vitae_content_suggestions() {
+        return curriculum_vitae_content_suggestions;
+    }
+
+    public void setCurriculum_vitae_content_suggestions(String curriculum_vitae_content_suggestions) {
+        this.curriculum_vitae_content_suggestions = curriculum_vitae_content_suggestions;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
     
 }   

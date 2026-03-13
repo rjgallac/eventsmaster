@@ -15,6 +15,8 @@ public class CvMapper {
         cvDto.setId(curriculumVitae.getId());
         cvDto.setName(curriculumVitae.getName());
         cvDto.setCurriculum_vitae_content(curriculumVitae.getCurriculum_vitae_content());
+        cvDto.setCurriculum_vitae_content_suggestions(curriculumVitae.getCurriculum_vitae_content_suggestions());
+        cvDto.setStatus(curriculumVitae.getStatus());
         return cvDto;
     }
 

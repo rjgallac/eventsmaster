@@ -36,7 +36,7 @@ public class CvController {
     @GetMapping
     public List<CvDto> getCvs() {
         List<CurriculumVitae> curriculumVitaes = cvService.getCvs();
-        return curriculumVitaes.stream().map(cvMapper::toDto).collect(java.util.stream.Collectors.toList());
+        return curriculumVitaes.stream().map(cvMapper::toDto).toList();
     }
 
     @GetMapping("/{id}")
@@ -45,7 +45,11 @@ public class CvController {
         return cvMapper.toDto(curriculumVitae);
     }
     
-
+    @GetMapping("/{id}/suggest")
+    public CvDto getSuggest(@RequestParam Long id) {
+        CurriculumVitae curriculumVitae = cvService.sendCvForComparison(id);
+        return cvMapper.toDto(curriculumVitae);
+    }
 
     @PostMapping
     public String addCv(@RequestBody CvDto cvDto) {

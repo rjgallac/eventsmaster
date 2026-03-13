@@ -6,9 +6,11 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
+import com.example.backend1.model.CurriculumVitae;
 import com.example.backend1.model.CvCompareResponseMessage;
+import com.example.backend1.model.CvSuggestResponseMessage;
 import com.example.backend1.model.JobSpec;
-import com.example.backend1.model.StatusMessage;
+import com.example.backend1.repository.CvRepository;
 import com.example.backend1.repository.JobSpecRepository;
 
 @Component
@@ -20,9 +22,12 @@ public class StatusConsumer {
 
     private final JobSpecRepository jobSpecRepository;
 
-    public StatusConsumer(SimpMessagingTemplate messagingTemplate, JobSpecRepository jobSpecRepository) {
+    private final CvRepository cvRepository;
+
+    public StatusConsumer(SimpMessagingTemplate messagingTemplate, JobSpecRepository jobSpecRepository, CvRepository cvRepository) {
         this.messagingTemplate = messagingTemplate;
         this.jobSpecRepository = jobSpecRepository;
+        this.cvRepository = cvRepository;
     }
 
     @RabbitListener(queues = "status-queue")
@@ -37,5 +42,13 @@ public class StatusConsumer {
         jobSpec.setStatus("completed");
         jobSpecRepository.save(jobSpec);
         messagingTemplate.convertAndSend("/topic/status", message);
+    }
+
+    @RabbitListener(queues = "suggest-response-queue")
+    public void receiveSuggestMessage(CvSuggestResponseMessage cvSuggestResponseMessage) {
+        logger.info("Received suggest message: " + cvSuggestResponseMessage.getCvId());
+        CurriculumVitae curriculumVitae = cvRepository.findById(cvSuggestResponseMessage.getCvId()).get();
+        curriculumVitae.setCurriculum_vitae_content_suggestions(cvSuggestResponseMessage.getSuggestions());
+        cvRepository.save(curriculumVitae);
     }
 }

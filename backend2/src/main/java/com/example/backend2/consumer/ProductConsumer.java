@@ -3,22 +3,17 @@ package com.example.backend2.consumer;
 import java.util.logging.Logger;
 
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.openai.api.ResponseFormat;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.backend2.model.AiResponse;
 import com.example.backend2.model.CvCompareMessage;
 import com.example.backend2.model.CvCompareResponseMessage;
+import com.example.backend2.model.CvSuggestMessage;
 import com.example.backend2.service.MessageService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rabbitmq.client.impl.AMQImpl.Channel.Open;
 
 @Component
 public class ProductConsumer {
@@ -26,8 +21,6 @@ public class ProductConsumer {
     private final MessageService messageService;
 
     private final ChatClient chatClient;
-
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     Logger logger = Logger.getLogger(ProductConsumer.class.getName());
 
@@ -48,7 +41,7 @@ public class ProductConsumer {
         sb2.append("Job Description: " + message.getJobSpecContent());
         sb2.append("CV Content: " + message.getCvContent());
 
-OpenAiChatOptions options = OpenAiChatOptions.builder()
+        OpenAiChatOptions options = OpenAiChatOptions.builder()
             .responseFormat(
                 ResponseFormat.builder()
                 .type(ResponseFormat.Type.JSON_SCHEMA)
@@ -65,7 +58,6 @@ OpenAiChatOptions options = OpenAiChatOptions.builder()
                 .type(ResponseFormat.Type.JSON_SCHEMA)
                 .jsonSchema("{\"type\":\"object\",\"properties\":{\"score\":{\"type\":\"number\"}}}}")
                 .build())
-                
             .build();
 
         AiResponse aiResponse = chatClient
@@ -96,6 +88,21 @@ OpenAiChatOptions options = OpenAiChatOptions.builder()
 
         messageService.sendStatusMessage(responseMessage);
         
+    }
+
+    @RabbitListener(queues = "queue-name")
+    public void receiveSuggestMessage(CvSuggestMessage cvSuggestMessage) {
+        logger.info("Received suggest message: " + cvSuggestMessage.getCvContent());
+        // Process the message and generate suggestions
+        String suggestions = "Recommend improvements for the following CV please";
+        String aiResponse = chatClient
+            .prompt(suggestions)
+            .call().content();
+
+
+        logger.info("Generated suggestions: " + suggestions);
+        // Send the suggestions back to the first service
+        messageService.sendSuggestMessage(cvSuggestMessage.getCvId(), aiResponse);
     }
 
 }

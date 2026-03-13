@@ -17,6 +17,11 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue cvSuggestQueue() {
+        return new Queue("cv-suggest-queue", false);
+    }
+
+    @Bean
     public Queue statusQueue() {
         return new Queue("status-queue", false);
     }
