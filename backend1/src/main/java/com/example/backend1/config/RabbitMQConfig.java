@@ -27,6 +27,11 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue suggestResponseQueue() {
+        return new Queue("suggest-response-queue", false);
+    }
+
+    @Bean
     public DirectExchange exchange() {
         return new DirectExchange("exchange-name");
     }
@@ -38,8 +43,18 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Binding cvSuggestBinding(Queue cvSuggestQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(cvSuggestQueue).to(exchange).with("cv-suggest-routing-key");
+    }
+
+    @Bean
     public Binding statusBinding(Queue statusQueue, DirectExchange exchange) {
         return BindingBuilder.bind(statusQueue).to(exchange).with("status-routing-key");
+    }
+
+    @Bean
+    public Binding statusQueueBinding(Queue suggestResponseQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(suggestResponseQueue).to(exchange).with("suggest-response-routing-key");
     }
 
     @Bean
