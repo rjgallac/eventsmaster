@@ -3,3 +3,4 @@
 .nx/workspace-data
 vite.config.*.timestamp*
 node_modules
+*.log
