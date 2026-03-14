@@ -44,7 +44,7 @@ public class CvService {
         cv.setStatus("Processing");
         cvRepository.save(cv);
         CvSuggestMessage cvSuggestMessage = new CvSuggestMessage(cv.getCurriculum_vitae_content(), cvId);
-        rabbitTemplate.convertAndSend("cvSuggestQueue", cvSuggestMessage);
+        rabbitTemplate.convertAndSend("cv-suggest-queue", cvSuggestMessage);
         return cv;
     }
 

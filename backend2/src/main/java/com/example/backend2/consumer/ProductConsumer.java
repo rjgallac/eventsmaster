@@ -90,17 +90,19 @@ public class ProductConsumer {
         
     }
 
-    @RabbitListener(queues = "queue-name")
+    @RabbitListener(queues = "cv-suggest-queue")
     public void receiveSuggestMessage(CvSuggestMessage cvSuggestMessage) {
-        logger.info("Received suggest message: " + cvSuggestMessage.getCvContent());
+        // logger.info("Received suggest message: " + cvSuggestMessage.getCvContent());
         // Process the message and generate suggestions
-        String suggestions = "Recommend improvements for the following CV please";
+        StringBuilder suggestions = new StringBuilder();
+        suggestions.append("Recommend improvements for the following CV please");
+        suggestions.append("CV Content: " + cvSuggestMessage.getCvContent());
         String aiResponse = chatClient
-            .prompt(suggestions)
+            .prompt(suggestions.toString())
             .call().content();
 
 
-        logger.info("Generated suggestions: " + suggestions);
+        // logger.info("Generated suggestions: " + suggestions);
         // Send the suggestions back to the first service
         messageService.sendSuggestMessage(cvSuggestMessage.getCvId(), aiResponse);
     }

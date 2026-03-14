@@ -40,13 +40,13 @@ public class CvController {
     }
 
     @GetMapping("/{id}")
-    public CvDto getCv(@RequestParam Long id) {
+    public CvDto getCv(@PathVariable Long id) {
         CurriculumVitae curriculumVitae = cvService.getCv(id);
         return cvMapper.toDto(curriculumVitae);
     }
     
     @GetMapping("/{id}/suggest")
-    public CvDto getSuggest(@RequestParam Long id) {
+    public CvDto getSuggest(@PathVariable Long id) {
         CurriculumVitae curriculumVitae = cvService.sendCvForComparison(id);
         return cvMapper.toDto(curriculumVitae);
     }

@@ -6,9 +6,17 @@ interface CvListProps {
   cvs: Cv[];
   onView: (cv: Cv) => void;
   onDelete: (id: number) => Promise<void>;
+  onSuggest: (id: number) => Promise<void>;
+  onViewSuggestions: (cv: Cv) => Promise<void>;
 }
 
-export function CvList({ cvs, onView, onDelete }: CvListProps) {
+export function CvList({
+  cvs,
+  onView,
+  onDelete,
+  onSuggest,
+  onViewSuggestions,
+}: CvListProps) {
   return (
     <div className="bg-white rounded-lg shadow-md mt-8">
       <h1 className="text-2xl font-bold p-6 border-b">CV List</h1>
@@ -22,6 +30,8 @@ export function CvList({ cvs, onView, onDelete }: CvListProps) {
               cv={cv}
               onView={onView}
               onDelete={onDelete}
+              onSuggest={onSuggest}
+              onViewSuggestions={onViewSuggestions}
             />
           ))}
         </div>
